@@ -8,7 +8,7 @@ from itertools import starmap
 from sqlalchemy.sql import select
 
 sys.path.insert(0, '/app/mysqldb')
-from models import rsid, transcript, gene, RSID, Transcript, Gene
+from mysqldb.models import rsid, transcript, gene, RSID, Transcript, Gene
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

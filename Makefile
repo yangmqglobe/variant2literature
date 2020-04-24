@@ -6,7 +6,7 @@ MYSQL_ROOT_PASSWORD=s8fjYJd92oP
 MYSQL_VOLUME=${CURRENT_DIR}/mysql_data
 
 CUDA_VISIBLE_DEVICES=0
-NUM_PROCESSES=1
+NUM_PROCESSES=2
 NUM_TABLE_DETECTORS=1
 
 IMAGE_NAME=variant2literature
@@ -17,14 +17,16 @@ build:
 	docker build -t ${IMAGE_NAME} .
 
 compile:
-	nvidia-docker run --rm --name ${CONTAINER_NAME} \
+	docker run --gpus all --rm --name ${CONTAINER_NAME} \
 		-v ${CURRENT_DIR}:/app \
 		${IMAGE_NAME} \
 		bash -c "cd table_detector/lib && bash make.sh"
 
 run:
-	nvidia-docker run -d --name ${CONTAINER_NAME} \
+	docker run --gpus all -d --name ${CONTAINER_NAME} \
 		-v ${CURRENT_DIR}:/app \
+		-v /home/phoenix/data/pmc/oa_package/63:/pmc \
+		-v /home/phoenix/data/pmc/paper_data:/paper_data \
 		-e MYSQL_HOST=${DOCKER_HOST} \
 		-e MYSQL_PORT=${MYSQL_PORT} \
 		-e MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} \
@@ -36,6 +38,7 @@ run:
 
 run-db:
 	docker run -d --name ${MYSQL_NAME} \
+		-v ${CURRENT_DIR}:/app \
 		-v ${MYSQL_VOLUME}:/var/lib/mysql \
 		-p ${MYSQL_PORT}:3306 \
 		-e MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} \
@@ -45,11 +48,18 @@ load-db:
 	docker exec -it ${CONTAINER_NAME} \
 		bash -c "cd mysqldb && python models.py"
 
+dump-db:
+	docker exec -it ${MYSQL_NAME} \
+		bash -c 'mysqldump --add-drop-database --password=${MYSQL_ROOT_PASSWORD} --opt --where="1 limit 1000" gene > /app/${MYSQL_NAME}.sql'
+
 bash:
 	docker exec -it ${CONTAINER_NAME} bash
 
+#index:
+#	docker exec -it ${CONTAINER_NAME} python main.py --n-process ${NUM_PROCESSES}
+
 index:
-	docker exec -it ${CONTAINER_NAME} python main.py --n-process ${NUM_PROCESSES}
+	docker exec -it ${CONTAINER_NAME} python index.py --n-process ${NUM_PROCESSES}
 
 query:
 	docker exec -it ${CONTAINER_NAME} python query.py ${OUTPUT_FILE}
