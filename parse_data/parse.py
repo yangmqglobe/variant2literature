@@ -33,12 +33,15 @@ def read_doc(path):
     """read .doc
     """
     with tempfile.TemporaryDirectory() as tempdir:
-        with open(os.devnull, 'w') as fnull:
-            subprocess.call(['soffice', '--headless', '--convert-to', 'docx',
-                             '--outdir', tempdir, path], stdout=fnull, stderr=fnull)
+        subprocess.run(
+            [
+                'soffice', '-env:UserInstallation=file://{}'.format(tempdir),
+                '--headless', '--convert-to', 'docx', '--outdir', tempdir, path
+            ],
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+        )
         docx_path = os.path.join(tempdir, os.path.basename(path).rsplit('.', 1)[0] + '.docx')
         ret = read_docx(docx_path)
-        os.unlink(docx_path)
     return ret
 
 
