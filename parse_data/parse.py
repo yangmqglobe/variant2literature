@@ -188,6 +188,10 @@ def read_xml(path):  # pylint: disable=too-many-locals
             })
             tables.append(table)
 
+        for tag in ['notes', 'ref_list', 'floats-group']:
+            for element in soup.findAll(tag):
+                element.decompose()
+
         for paragraph in soup.findAll('p'):
             for t in paragraph.findAll('table'):
                 t.extract()

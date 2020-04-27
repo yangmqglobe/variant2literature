@@ -6,7 +6,7 @@ MYSQL_ROOT_PASSWORD=s8fjYJd92oP
 MYSQL_VOLUME=${CURRENT_DIR}/mysql_data
 
 CUDA_VISIBLE_DEVICES=0
-NUM_PROCESSES = $(shell echo "`nproc` / 2"|bc)
+NUM_PROCESSES = $(shell nproc)
 NUM_TABLE_DETECTORS=1
 
 IMAGE_NAME=variant2literature

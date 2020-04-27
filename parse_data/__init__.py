@@ -30,7 +30,7 @@ def get_path(_id):
     """
     dirname = '/app/data/paper_data'
     m = hashlib.md5(_id.encode('ascii'))
-    h = base64.b16encode(m.digest()).decode('ascii')
+    h = base64.b16encode(m.digest()).decode('ascii').lower()
     h1, h2 = h[:2], h[2:4]
     path = os.path.join(dirname, h1, h2)
     return path
