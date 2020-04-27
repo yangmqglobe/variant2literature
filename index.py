@@ -40,7 +40,7 @@ def parse_args() -> argparse.Namespace:
 
     parser.add_argument("--n-process", type=int, default=1)
     parser.add_argument("--loglevel", type=str, default='INFO')
-    parser.add_argument("--input", type=str, default='/pmc/**/*.tar.gz')
+    parser.add_argument("--input", type=str, default='/app/data/pmc/**/*.tar.gz')
 
     parser.set_defaults(nxml_only=False)
     parser.add_argument("--nxml-only", action='store_true', dest='nxml_only')

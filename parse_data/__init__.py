@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 def get_path(_id):
     """get path to put paper data
     """
-    dirname = '/paper_data'
+    dirname = '/app/data/paper_data'
     m = hashlib.md5(_id.encode('ascii'))
     h = base64.b16encode(m.digest()).decode('ascii')
     h1, h2 = h[:2], h[2:4]

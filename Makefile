@@ -25,8 +25,6 @@ compile:
 run:
 	docker run --gpus all -d --name ${CONTAINER_NAME} \
 		-v ${CURRENT_DIR}:/app \
-		-v /home/phoenix/data/pmc/oa_package/63:/pmc \
-		-v /home/phoenix/data/pmc/paper_data:/paper_data \
 		-e MYSQL_HOST=${DOCKER_HOST} \
 		-e MYSQL_PORT=${MYSQL_PORT} \
 		-e MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} \
