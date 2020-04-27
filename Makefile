@@ -6,7 +6,7 @@ MYSQL_ROOT_PASSWORD=s8fjYJd92oP
 MYSQL_VOLUME=${CURRENT_DIR}/mysql_data
 
 CUDA_VISIBLE_DEVICES=0
-NUM_PROCESSES=2
+NUM_PROCESSES = $(shell echo "`nproc` / 2"|bc)
 NUM_TABLE_DETECTORS=1
 
 IMAGE_NAME=variant2literature
@@ -18,8 +18,8 @@ SHELL = /bin/sh
 UID = $(shell id -u)
 GID = $(shell id -g)
 
-PMC = $(realpath data/pmc)
-PAPER_DATA = $(realpath data/paper_data)
+PMC = $(shell realpath data/pmc)
+PAPER_DATA = $(shell realpath data/paper_data)
 
 build:
 	docker build -t ${IMAGE_NAME} .
