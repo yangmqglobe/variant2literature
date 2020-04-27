@@ -13,6 +13,14 @@ IMAGE_NAME=variant2literature
 CONTAINER_NAME=v2l
 MYSQL_NAME=v2l_mysql
 
+SHELL = /bin/sh
+
+UID = $(shell id -u)
+GID = $(shell id -g)
+
+PMC = $(realpath data/pmc)
+PAPER_DATA = $(realpath data/paper_data)
+
 build:
 	docker build -t ${IMAGE_NAME} .
 
@@ -25,6 +33,8 @@ compile:
 run:
 	docker run --gpus all -d --name ${CONTAINER_NAME} \
 		-v ${CURRENT_DIR}:/app \
+		-v ${PMC}:/app/data/pmc \
+		-v ${PAPER_DATA}:/app/data/paper_data \
 		-e MYSQL_HOST=${DOCKER_HOST} \
 		-e MYSQL_PORT=${MYSQL_PORT} \
 		-e MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} \
@@ -57,7 +67,7 @@ bash:
 #	docker exec -it ${CONTAINER_NAME} python main.py --n-process ${NUM_PROCESSES}
 
 index:
-	docker exec -it ${CONTAINER_NAME} --user ${UID} python index.py --n-process ${NUM_PROCESSES}
+	docker exec -itu ${UID}:${GID} ${CONTAINER_NAME} python index.py --n-process ${NUM_PROCESSES}
 
 query:
 	docker exec -it ${CONTAINER_NAME} python query.py ${OUTPUT_FILE}

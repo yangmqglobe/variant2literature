@@ -97,7 +97,7 @@ def worker(jobs, args):  # pylint: disable=too-many-locals
 
                 parsed_data = parse_data.process(
                     _id, os.path.join(tmpdir, _id), nxml_only=args.nxml_only,
-                    table_detect=args.table_detect, save_data=False
+                    table_detect=args.table_detect, save_data=True
                 )
 
                 results = []
