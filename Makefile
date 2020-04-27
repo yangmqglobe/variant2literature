@@ -57,7 +57,7 @@ bash:
 #	docker exec -it ${CONTAINER_NAME} python main.py --n-process ${NUM_PROCESSES}
 
 index:
-	docker exec -it ${CONTAINER_NAME} python index.py --n-process ${NUM_PROCESSES}
+	docker exec -it ${CONTAINER_NAME} --user ${UID} python index.py --n-process ${NUM_PROCESSES}
 
 query:
 	docker exec -it ${CONTAINER_NAME} python query.py ${OUTPUT_FILE}
