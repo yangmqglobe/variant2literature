@@ -36,10 +36,22 @@ def get_path(_id):
     return path
 
 
+def get_dump_path(_id):
+    dirname = '/app/data/paper_data'
+    from models import (engine,  paper_status)
+    with engine.connect() as conn:
+        query = paper_status.select().where(paper_status.c._id == _id)
+        row = conn.execute(query).fetchone()
+        if row is not None:
+            return os.path.join(dirname, row['path'])
+        else:
+            return os.path.join(dirname, 'unknown')
+
+
 def dump_data(_id, parsed_data):
     """dump parsed data
     """
-    output_dir = os.path.join(get_path(_id), _id)
+    output_dir = os.path.join(get_dump_path(_id), _id)
     if os.path.exists(output_dir):
         shutil.rmtree(output_dir)
     os.makedirs(output_dir)
