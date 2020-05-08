@@ -57,8 +57,8 @@ load-db:
 		bash -c "cd mysqldb && python models.py"
 
 dump-db:
-	docker exec -it ${MYSQL_NAME} \
-		bash -c 'mysqldump --add-drop-database --password=${MYSQL_ROOT_PASSWORD} --opt --where="1 limit 1000" gene > /app/${MYSQL_NAME}.sql'
+	docker exec -itu ${UID}:${GID} ${MYSQL_NAME} \
+		bash -c 'mysqldump --add-drop-database -u root --password=${MYSQL_ROOT_PASSWORD} --opt --where="1 limit 1000" gene > /app/${MYSQL_NAME}.sql'
 
 bash:
 	docker exec -it ${CONTAINER_NAME} bash

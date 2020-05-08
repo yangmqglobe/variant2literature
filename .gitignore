@@ -11,3 +11,4 @@ mysql_data
 PT_CTDGene.txt
 CRF++-0.58.tar.gz
 .idea
+models/oa_file_list.csv
