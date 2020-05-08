@@ -306,6 +306,32 @@ def insert_genes(engine):
         print(i + 1, 'genes inserted', time.time() - t)
 
 
+def insert_papers(engine):
+    t = time.time()
+    with open('/app/models/oa_file_list.csv') as f, engine.connect() as conn:
+        conn.execute('truncate paper_status')
+        f.readline()
+
+        reader = csv.reader(f)
+
+        values, i = [], -1
+        for i, row in enumerate(reader):
+            values.append({
+                '_id': row[2],
+                'pmid': row[4],
+                'pmcid': row[2],
+                'path': '/'.join(row[0].split('/')[1:3])
+            })
+
+            if (i + 1) % 10000 == 0:
+                conn.execute(paper_status.insert(), values)
+                print(i + 1, 'paper inserted', time.time() - t)
+                values = []
+
+        conn.execute(paper_status.insert(), values)
+        print(i + 1, 'paper inserted', time.time() - t)
+
+
 host = os.environ['MYSQL_HOST']
 port = os.environ['MYSQL_PORT']
 passwd = os.environ['MYSQL_ROOT_PASSWORD']
@@ -329,7 +355,7 @@ def init():
     insert_genes(engine)
     insert_transcripts(engine)
     insert_rsid(engine)
-
+    insert_papers(engine)
     index = Index('idx_name', rsid.c.name)
     index.create(bind=engine)
 
